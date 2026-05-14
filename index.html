@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phishing Awareness Workshop — Vaibhav Chaurasiya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0b0f14;
+      --bg2:       #111820;
+      --card:      #151d26;
+      --card2:     #1a2330;
+      --border:    #1e2d3d;
+      --teal:      #00d4aa;
+      --teal-dim:  #00a882;
+      --blue:      #3d8bff;
+      --white:     #e8f0f8;
+      --muted:     #6b82a0;
+      --danger:    #ff4e6a;
+      --mono:      'Space Mono', monospace;
+      --sans:      'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND GRID ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 48px;
+      background: rgba(11,15,20,.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--teal);
+      letter-spacing: .08em;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: .85rem;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: .04em;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* ── WRAPPER ── */
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      position: relative;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--teal);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(0,212,170,.3);
+      padding: 6px 14px;
+      border-radius: 3px;
+      margin-bottom: 24px;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+      0%,100%{ opacity:1; transform:scale(1);}
+      50%{ opacity:.4; transform:scale(1.4);}
+    }
+    .hero h1 {
+      font-family: var(--sans);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      margin-bottom: 24px;
+    }
+    .hero h1 span { color: var(--teal); }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--teal);
+      color: #000;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .9rem;
+      padding: 14px 32px;
+      border-radius: 6px;
+      text-decoration: none;
+      letter-spacing: .02em;
+      transition: background .2s, transform .15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--teal-dim); transform: translateY(-2px); }
+
+    .btn-ghost {
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-size: .9rem;
+      font-weight: 500;
+      padding: 14px 32px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── PROFILE CARD (HERO RIGHT) ── */
+    .profile-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    }
+    .pc-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono);
+      font-size: 1.5rem;
+      color: var(--teal);
+      background: var(--card2);
+      margin-bottom: 16px;
+    }
+    .pc-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .pc-role {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--teal);
+      letter-spacing: .08em;
+      margin-bottom: 24px;
+    }
+    .pc-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .pc-stat {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .pc-stat-label {
+      font-family: var(--mono);
+      font-size: .62rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .pc-stat-val {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .pc-stat-val span { color: var(--teal); }
+    .pc-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .badge {
+      font-family: var(--mono);
+      font-size: .65rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      letter-spacing: .06em;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 100px 0; }
+    .section-label {
+      font-family: var(--mono);
+      font-size: .7rem;
+      color: var(--teal);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 56px;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      overflow: hidden;
+    }
+    .stat-item {
+      padding: 32px 28px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--teal);
+      font-family: var(--mono);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: .8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── WHY MATTERS ── */
+    .threat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .threat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      position: relative;
+      transition: border-color .25s, transform .2s;
+    }
+    .threat-card:hover { border-color: var(--teal); transform: translateY(-4px); }
+    .threat-icon {
+      font-size: 1.8rem;
+      margin-bottom: 14px;
+    }
+    .threat-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .threat-card p {
+      font-size: .87rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .threat-card.red { border-top: 2px solid var(--danger); }
+    .threat-card.teal { border-top: 2px solid var(--teal); }
+    .threat-card.blue { border-top: 2px solid var(--blue); }
+
+    /* ── AGENDA / CURRICULUM ── */
+    .agenda-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .agenda-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 26px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      transition: border-color .2s;
+    }
+    .agenda-item:hover { border-color: rgba(0,212,170,.4); }
+    .agenda-num {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--teal);
+      background: rgba(0,212,170,.08);
+      border: 1px solid rgba(0,212,170,.25);
+      border-radius: 6px;
+      padding: 6px 10px;
+      min-width: 42px;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .agenda-text h4 {
+      font-size: .98rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .agenda-text p {
+      font-size: .83rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── FORMAT ── */
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .format-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+      text-align: center;
+      transition: border-color .2s, transform .2s;
+    }
+    .format-card:hover { border-color: var(--teal); transform: translateY(-3px); }
+    .format-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .format-card h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .format-card p {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── ABOUT TRAINER ── */
+    .trainer-wrap {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .trainer-left {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      position: relative;
+    }
+    .trainer-left::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+    }
+    .trainer-avatar {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono);
+      font-size: 2rem;
+      color: var(--teal);
+      background: var(--card2);
+      margin: 0 auto 20px;
+    }
+    .trainer-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .trainer-title {
+      font-family: var(--mono);
+      font-size: .68rem;
+      color: var(--teal);
+      letter-spacing: .1em;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .cred-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .cred-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .85rem;
+      color: var(--white);
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .cred-list li::before {
+      content: '✓';
+      color: var(--teal);
+      font-weight: 700;
+      font-size: .8rem;
+      flex-shrink: 0;
+    }
+
+    .trainer-right h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .trainer-right p {
+      color: var(--muted);
+      font-size: .95rem;
+      margin-bottom: 20px;
+    }
+    .achieve-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .achieve-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .achieve-label {
+      font-family: var(--mono);
+      font-size: .62rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .achieve-val {
+      font-weight: 700;
+      font-size: .95rem;
+    }
+    .achieve-val span { color: var(--teal); }
+
+    /* ── WHAT SCHOOL GETS ── */
+    .perks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .perk {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+    }
+    .perk-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .perk h4 {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .perk p {
+      font-size: .83rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── CONTACT ── */
+    .contact-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 64px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    }
+    .contact-box h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .contact-box p {
+      color: var(--muted);
+      margin-bottom: 40px;
+      font-size: .97rem;
+    }
+    .contact-methods {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 24px;
+      text-decoration: none;
+      color: var(--white);
+      font-size: .87rem;
+      font-weight: 500;
+      transition: border-color .2s, color .2s;
+    }
+    .contact-link:hover { border-color: var(--teal); color: var(--teal); }
+    .contact-link .icon { font-size: 1.1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+      position: relative;
+      z-index: 1;
+    }
+    footer span { color: var(--teal); }
+
+    /* ── FADE-IN ANIMATION ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .profile-card { display: none; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .threat-grid, .format-grid { grid-template-columns: 1fr; }
+      .agenda-grid, .achieve-grid, .perks-grid { grid-template-columns: 1fr; }
+      .trainer-wrap { grid-template-columns: 1fr; }
+      .contact-box { padding: 40px 28px; }
+      .wrap { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">&gt;_ VC / Workshop</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#curriculum">Curriculum</a>
+    <a href="#trainer">Trainer</a>
+    <a href="#contact">Book Now</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag">Cybersecurity Education Initiative</div>
+        <h1>Phishing<br/><span>Awareness</span><br/>Workshop</h1>
+        <p>A hands-on, interactive session designed to teach students and staff how to identify, avoid, and report phishing attacks — the #1 cyber threat facing schools today.</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn-primary">Book the Workshop</a>
+          <a href="#curriculum" class="btn-ghost">See Curriculum ↓</a>
+        </div>
+      </div>
+
+      <!-- profile card -->
+      <div class="profile-card">
+        <div class="pc-avatar">VC</div>
+        <div class="pc-name">Vaibhav Chaurasiya</div>
+        <div class="pc-role">&gt;_ Ethical Hacker &amp; Cybersecurity Enthusiast</div>
+        <div class="pc-stats">
+          <div class="pc-stat">
+            <div class="pc-stat-label">TryHackMe</div>
+            <div class="pc-stat-val"><span>Top 1%</span></div>
+          </div>
+          <div class="pc-stat">
+            <div class="pc-stat-label">Global Rank</div>
+            <div class="pc-stat-val">#<span>18562</span></div>
+          </div>
+          <div class="pc-stat">
+            <div class="pc-stat-label">Rooms Done</div>
+            <div class="pc-stat-val"><span>184</span></div>
+          </div>
+          <div class="pc-stat">
+            <div class="pc-stat-label">Badges</div>
+            <div class="pc-stat-val"><span>22</span></div>
+          </div>
+        </div>
+        <div class="pc-badges">
+          <span class="badge">Kali Linux</span>
+          <span class="badge">OSINT</span>
+          <span class="badge">Pen Testing</span>
+          <span class="badge">CTF Player</span>
+          <span class="badge">Net Security</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ── STATS ── -->
+<section style="padding: 64px 0;">
+  <div class="wrap fade-in">
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num">91%</div>
+        <div class="stat-label">of cyberattacks start with phishing</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1 in 3</div>
+        <div class="stat-label">students have encountered a phishing link</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">60 min</div>
+        <div class="stat-label">session duration — zero disruption</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">Free</div>
+        <div class="stat-label">offered at no cost to your school</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ── WHY IT MATTERS ── -->
+<section id="about">
+  <div class="wrap">
+    <div class="fade-in">
+      <div class="section-label">// Why It Matters</div>
+      <div class="section-title">Schools are a prime target.<br/>Your students need to know this.</div>
+      <p class="section-sub">Cybercriminals specifically target younger audiences because they're less suspicious. One click on a fake link can compromise an entire school network.</p>
+    </div>
+    <div class="threat-grid">
+      <div class="threat-card red fade-in">
+        <div class="threat-icon">🎣</div>
+        <h4>Fake Login Pages</h4>
+        <p>Students receive emails mimicking Google, YouTube or school portals asking for their password. One mistake and their account is gone.</p>
+      </div>
+      <div class="threat-card teal fade-in">
+        <div class="threat-icon">📲</div>
+        <h4>SMS & WhatsApp Scams</h4>
+        <p>Phishing isn't just email anymore. Fake prize messages and "verify your account" texts target students daily on their phones.</p>
+      </div>
+      <div class="threat-card blue fade-in">
+        <div class="threat-icon">🧠</div>
+        <h4>Social Engineering</h4>
+        <p>Attackers impersonate teachers or admin staff. Without awareness, even cautious students can be manipulated into sharing sensitive data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ── CURRICULUM ── -->
+<section id="curriculum">
+  <div class="wrap">
+    <div class="fade-in">
+      <div class="section-label">// Workshop Curriculum</div>
+      <div class="section-title">What Students Will Learn</div>
+      <p class="section-sub">A structured 60-minute session covering real-world threats, live demonstrations, and interactive Q&amp;A.</p>
+    </div>
+    <div class="agenda-grid">
+      <div class="agenda-item fade-in">
+        <div class="agenda-num">01</div>
+        <div class="agenda-text">
+          <h4>What is Phishing?</h4>
+          <p>Understanding the concept, history, and how phishing has evolved — from basic email scams to sophisticated spear-phishing attacks.</p>
+        </div>
+      </div>
+      <div class="agenda-item fade-in">
+        <div class="agenda-num">02</div>
+        <div class="agenda-text">
+          <h4>Spotting a Fake Email</h4>
+          <p>Live analysis of real phishing emails — identifying red flags like spoofed senders, urgent language, and suspicious links.</p>
+        </div>
+      </div>
+      <div class="agenda-item fade-in">
+        <div class="agenda-num">03</div>
+        <div class="agenda-text">
+          <h4>Fake Websites & URLs</h4>
+          <p>How attackers clone real websites. Students learn to read URLs, check SSL certificates, and spot lookalike domains.</p>
+        </div>
+      </div>
+      <div class="agenda-item fade-in">
+        <div class="agenda-num">04</div>
+        <div class="agenda-text">
+          <h4>Social Engineering Tactics</h4>
+          <p>The psychology behind manipulation — urgency, authority, and fear. How to pause and think before acting on requests.</p>
+        </div>
+      </div>
+      <div class="agenda-item fade-in">
+        <div class="agenda-num">05</div>
+        <div class="agenda-text">
+          <h4>Phishing on Mobile & Social Media</h4>
+          <p>WhatsApp forwards, Instagram DMs, fake prize links — students see how attacks look on the devices they use every day.</p>
+        </div>
+      </div>
+      <div class="agenda-item fade-in">
+        <div class="agenda-num">06</div>
+        <div class="agenda-text">
+          <h4>What To Do If You're Targeted</h4>
+          <p>Practical response steps — who to tell, how to report, changing passwords, and how to stay protected going forward.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ── FORMAT ── -->
+<section>
+  <div class="wrap">
+    <div class="fade-in">
+      <div class="section-label">// Workshop Format</div>
+      <div class="section-title">Designed to engage, not lecture.</div>
+      <p class="section-sub">This isn't a boring slideshow. It's built to keep students actively involved throughout.</p>
+    </div>
+    <div class="format-grid">
+      <div class="format-card fade-in">
+        <div class="format-icon">🖥️</div>
+        <h4>Live Demonstrations</h4>
+        <p>Real phishing examples shown live — students see exactly what to watch for on screen, making it instantly memorable.</p>
+      </div>
+      <div class="format-card fade-in">
+        <div class="format-icon">🎯</div>
+        <h4>Interactive Quizzes</h4>
+        <p>Quick "spot the phish" challenges where students identify whether an email or link is real or fake in real time.</p>
+      </div>
+      <div class="format-card fade-in">
+        <div class="format-icon">💬</div>
+        <h4>Open Q&amp;A Session</h4>
+        <p>Students share experiences, ask questions, and discuss real scenarios they've actually encountered.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ── TRAINER ── -->
+<section id="trainer">
+  <div class="wrap">
+    <div class="fade-in">
+      <div class="section-label">// About the Trainer</div>
+      <div class="section-title">Led by a verified cybersecurity practitioner.</div>
+      <p class="section-sub">Not theory from a textbook — real knowledge from someone who actively practices ethical hacking and cybersecurity.</p>
+    </div>
+    <div class="trainer-wrap">
+      <div>
+        <div class="trainer-left fade-in">
+          <div class="trainer-avatar">VC</div>
+          <div class="trainer-name">Vaibhav Chaurasiya</div>
+          <div class="trainer-title">&gt;_ Ethical Hacker &amp; Security Enthusiast</div>
+          <ul class="cred-list">
+            <li>TryHackMe — Top 1% Globally</li>
+            <li>Global Rank #18562</li>
+            <li>184 Rooms · 22 Badges Earned</li>
+            <li>Advent of Cyber 2023 &amp; 2025</li>
+            <li>IBM SkillsBuild — Cybersecurity Fundamentals</li>
+            <li>HP Cybersecurity Awareness Certified</li>
+            <li>Conducted Phishing Awareness Workshop</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trainer-right fade-in">
+        <h3>Passionate about cybersecurity education.</h3>
+        <p>
+          I'm Vaibhav Chaurasiya — an ethical hacker and cybersecurity enthusiast who believes that awareness is the most powerful defense against cyber threats.
+        </p>
+        <p>
+          I've spent hundreds of hours practicing on real hacking platforms, understanding exactly how attackers think and operate. I've already conducted a successful phishing awareness workshop and continue to refine my approach.
+        </p>
+        <p>
+          My goal is simple: equip your students with the knowledge to protect themselves online, taught in a way that actually sticks.
+        </p>
+        <div class="achieve-grid">
+          <div class="achieve-item">
+            <div class="achieve-label">Platform Rank</div>
+            <div class="achieve-val">Top <span>1%</span> — TryHackMe</div>
+          </div>
+          <div class="achieve-item">
+            <div class="achieve-label">Challenges</div>
+            <div class="achieve-val">Advent of Cyber <span>2023 &amp; 2025</span></div>
+          </div>
+          <div class="achieve-item">
+            <div class="achieve-label">Rooms Completed</div>
+            <div class="achieve-val"><span>184</span> rooms · <span>22</span> badges</div>
+          </div>
+          <div class="achieve-item">
+            <div class="achieve-label">Certifications</div>
+            <div class="achieve-val">IBM &amp; <span>HP</span> Cybersecurity</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ── WHAT SCHOOL GETS ── -->
+<section>
+  <div class="wrap">
+    <div class="fade-in">
+      <div class="section-label">// What Your School Gets</div>
+      <div class="section-title">Everything included. No hidden cost.</div>
+      <p class="section-sub">This workshop is a complete package — all you need to do is give us a classroom and a date.</p>
+    </div>
+    <div class="perks-grid">
+      <div class="perk fade-in">
+        <div class="perk-icon">📋</div>
+        <div>
+          <h4>Structured Presentation Material</h4>
+          <p>A well-prepared slide deck with real examples, visuals, and case studies — designed for student-age audiences.</p>
+        </div>
+      </div>
+      <div class="perk fade-in">
+        <div class="perk-icon">🏅</div>
+        <div>
+          <h4>Participation Certificate (Optional)</h4>
+          <p>Students can receive a digital certificate of participation to acknowledge their cybersecurity awareness training.</p>
+        </div>
+      </div>
+      <div class="perk fade-in">
+        <div class="perk-icon">📖</div>
+        <div>
+          <h4>Takeaway Safety Checklist</h4>
+          <p>A simple one-page guide students take home — a quick reference card on how to stay safe online.</p>
+        </div>
+      </div>
+      <div class="perk fade-in">
+        <div class="perk-icon">🕐</div>
+        <div>
+          <h4>60-Minute Zero-Disruption Session</h4>
+          <p>Fits within a single class period. Minimal setup required. No special equipment — just a projector or screen.</p>
+        </div>
+      </div>
+      <div class="perk fade-in">
+        <div class="perk-icon">🔁</div>
+        <div>
+          <h4>Post-Workshop Q&amp;A Support</h4>
+          <p>Students or teachers can reach out after the session with questions — we stay available to help.</p>
+        </div>
+      </div>
+      <div class="perk fade-in">
+        <div class="perk-icon">💸</div>
+        <div>
+          <h4>Completely Free of Charge</h4>
+          <p>This workshop is offered pro-bono as a community initiative. No fees, no commitments — just education.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ── CONTACT ── -->
+<section id="contact" style="padding: 80px 0;">
+  <div class="wrap">
+    <div class="contact-box fade-in">
+      <div class="section-label" style="text-align:center; margin-bottom:16px;">// Let's Make It Happen</div>
+      <h2>Ready to book the workshop?</h2>
+      <p>Reach out with your preferred date and we'll coordinate everything. It only takes one message to get started.</p>
+      <a href="#contact" class="btn-primary" style="font-size:1rem; padding:16px 40px;">Book the Workshop →</a>
+      <div class="contact-methods">
+        <a href="mailto:vaibhav@example.com" class="contact-link">
+          <span class="icon">✉️</span> vaibhav@example.com
+        </a>
+        <a href="https://wa.me/91XXXXXXXXXX" class="contact-link" target="_blank">
+          <span class="icon">💬</span> WhatsApp
+        </a>
+        <a href="https://linkedin.com/in/vaibhavchaurasiya" class="contact-link" target="_blank">
+          <span class="icon">🔗</span> LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>Designed &amp; presented by <span>Vaibhav Chaurasiya</span> · Ethical Hacker · TryHackMe Top <span>1%</span></p>
+  <p style="margin-top:8px; font-size:.62rem; color:#3a4f66;">Cybersecurity awareness starts with a single conversation.</p>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
